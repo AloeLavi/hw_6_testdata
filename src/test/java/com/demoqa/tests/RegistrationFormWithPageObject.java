@@ -2,12 +2,48 @@ package com.demoqa.tests;
 
 import com.codeborne.selenide.Configuration;
 import com.demoqa.pages.RegistrationFormPage;
+import com.demoqa.utils.RandomUtils;
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 
 public class RegistrationFormWithPageObject {
     RegistrationFormPage registrationFormPage = new RegistrationFormPage();
+
+    String firstName;
+    String lastName;
+    String email;
+    String phone;
+    String day;
+    String month;
+    String year;
+    String sex;
+    String hobby;
+    String address;
+    String subject;
+
+
+    Faker faker = new Faker();
+
+    @BeforeEach
+    void prepareTestData(){
+        firstName = faker.name().firstName();
+        lastName  = faker.name().lastName();
+        email = faker.internet().emailAddress();
+        phone = faker.phoneNumber().subscriberNumber(10);
+        sex = faker.demographic().sex();
+        hobby = RandomUtils.getRandomHobby();
+        address = faker.address().fullAddress();
+        subject = RandomUtils.getRandomSubject();
+        day = String.valueOf(faker.number().numberBetween(1,28));
+
+        month = RandomUtils.getRandomMonth();
+        year = String.valueOf(faker.number().numberBetween(1980,2010));
+
+    }
 
     @BeforeAll
     static void setUp() {
@@ -19,32 +55,33 @@ public class RegistrationFormWithPageObject {
     @Test
     void fillNameTest(){
 
+      //  String firstName="Valeria";
+
         registrationFormPage.openPage()
-                .setFirstName("Valeria")
-                .setLastName("Bagrova")
-                .setEmail("vbagrova123456@gmail.com")
-                .setGender("Female")
-                .setNumber("1234567890")
-                .setBirthDate("02", "August", "1994")
-                .setSubjects("Arts")
-                .setSubjects("Maths")
-                .setHobbies("Reading")
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setEmail(email)
+                .setGender(sex)
+                .setNumber(phone)
+                .setBirthDate(day, month, year)
+                .setSubjects(subject)
+                .setHobbies(hobby)
                 .setPicture("img/crow.jpg")
-                .setAddress("My Street")
+                .setAddress(address)
                 .setState("Haryana")
                 .setCity("Karnal")
                 .clickSubmit();
 
         registrationFormPage.checkResultsTableVisible()
-                .checkResult("Student Name","Valeria Bagrova")
-                .checkResult("Student Email","vbagrova123456@gmail.com")
-                .checkResult("Gender","Female")
-                .checkResult("Mobile","1234567890")
-                .checkResult("Date of Birth","02 August,1994")
-                .checkResult("Subjects","Arts, Maths")
-                .checkResult("Hobbies","Reading")
+                .checkResult("Student Name",firstName+ " "+lastName)
+                .checkResult("Student Email",email)
+                .checkResult("Gender",sex)
+                .checkResult("Mobile",phone)
+                .checkResult("Date of Birth",day + " "+ month + "," +  year)
+                .checkResult("Subjects",subject)
+                .checkResult("Hobbies",hobby)
                 .checkResult("Picture","crow.jpg")
-                .checkResult("Address","My Street")
+                .checkResult("Address",address)
                 .checkResult("State and City","Haryana Karnal");
 
     }
