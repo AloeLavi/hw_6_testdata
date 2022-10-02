@@ -25,7 +25,6 @@ public class RegistrationFormWithPageObject {
     String address;
     String subject;
 
-
     Faker faker = new Faker();
 
     @BeforeEach
@@ -39,7 +38,6 @@ public class RegistrationFormWithPageObject {
         address = faker.address().fullAddress();
         subject = RandomUtils.getRandomSubject();
         day = String.valueOf(faker.number().numberBetween(1,28));
-
         month = RandomUtils.getRandomMonth();
         year = String.valueOf(faker.number().numberBetween(1980,2010));
 
